@@ -1,0 +1,47 @@
+name: Update GitHub Stats & Language Boxes
+
+# ❶ manual trigger ❷ twice-a-day cron ❸ each push to master if you’re tweaking things
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */12 * * *'
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # ---- Install a recent Node runt​ime (required by the CLI tools) ----
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # ---- Short-circuit npm installs by caching ~/.npm between runs ----
+      - name: Cache NPM
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-npm-
+
+      # ---- ❸ Generate *overall* GitHub stats (total stars, PRs, etc.) ----
+      - name: GitHub stats box
+        run: npx github-stats-box@1
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GIST_ID: 32b3c22e4f6405f95ef74407d626631a
+          ALL_COMMITS: "true"      # include ALL, not just past 3k events
+          K_FORMAT: "false"        # 12 345 instead of 12.3 k
+
+      # ---- ❹ Generate *language* ranking box (the Figure 1 card) ----
+      - name: GitHub languages box
+        run: npx github-lang-box@1
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_USERNAME: shuaiyuu
+          GIST_ID: 95e87dce9a47f445417c1b551a7a25be
+          EXCLUDE: ${{ vars.EXCLUDE }}         # optional filters
+          EXCLUDE_REPO: ${{ vars.EXCLUDE_REPO }}
+          DESCRIPTION: "languages"             # gist description line
+
