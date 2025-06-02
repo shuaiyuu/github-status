@@ -30,7 +30,7 @@ jobs:
         run: npx github-stats-box@1
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          GIST_ID: <STATS_GIST_ID>
+          GIST_ID: 32b3c22e4f6405f95ef74407d626631a
           ALL_COMMITS: "true"      # include ALL, not just past 3k events
           K_FORMAT: "false"        # 12 345 instead of 12.3 k
 
@@ -39,8 +39,8 @@ jobs:
         run: npx github-lang-box@1
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          GH_USERNAME: <YOUR_GITHUB_USERNAME>
-          GIST_ID: <LANG_GIST_ID>
+          GH_USERNAME: shuaiyuu
+          GIST_ID: 95e87dce9a47f445417c1b551a7a25be
           EXCLUDE: ${{ vars.EXCLUDE }}         # optional filters
           EXCLUDE_REPO: ${{ vars.EXCLUDE_REPO }}
           DESCRIPTION: "languages"             # gist description line
